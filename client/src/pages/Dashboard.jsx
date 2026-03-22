@@ -223,9 +223,31 @@ export default function Dashboard() {
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
                             <span style={{ fontSize: '11px', color: '#94a3b8' }}>🕐 {getWaitTime(patient.created_at)}</span>
+                            {!isAllocated && (
+                              <button onClick={async () => {
+                                if(window.confirm('Remove ' + patient.name + ' from queue?')) {
+                                  await axios.delete('http://localhost:5000/api/patients/' + patient.id)
+                                  fetchData()
+                                }
+                              }}
+                                style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', color: '#ef4444', cursor: 'pointer', fontWeight: '600' }}>
+                                Remove
+                              </button>
+                            )}
                             {isAllocated && patient.allocated_resource && (
                               <span style={{ fontSize: '11px', color: '#10b981', fontWeight: '600' }}>📍 {patient.allocated_resource}</span>
                             )}
+                            {isAllocated && (
+                            <button onClick={async () => {
+                              if(window.confirm('Discharge ' + patient.name + '?')) {
+                                await axios.delete('http://localhost:5000/api/patients/' + patient.id)
+                                fetchData()
+                              }
+                            }}
+                              style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '6px', border: '1px solid #bbf7d0', background: '#ecfdf5', color: '#10b981', cursor: 'pointer', fontWeight: '600' }}>
+                              Discharge ✓
+                            </button>
+                          )}
                           </div>
                           {!isAllocated && available.length > 0 && (
                             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '10px' }}>
