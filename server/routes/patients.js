@@ -25,12 +25,18 @@ router.post('/', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+  
+  await supabase
+    .from('resources')
+    .update({ available: true, assigned_to: null })
+    .eq('assigned_to', id);
+
   const { error } = await supabase
     .from('patients')
     .delete()
     .eq('id', id);
+    
   if (error) return res.status(500).json({ error: error.message });
   res.json({ message: 'Patient removed' });
 });
-
 module.exports = router;
