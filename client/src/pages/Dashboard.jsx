@@ -13,8 +13,8 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const [p, r] = await Promise.all([
-        axios.get('http://localhost:5000/api/patients'),
-        axios.get('http://localhost:5000/api/resources')
+        axios.get('https://healthcare-allocator.onrender.com/api/patients'),
+        axios.get('https://healthcare-allocator.onrender.com/api/resources')
       ])
       setPatients(p.data)
       setResources(r.data)
@@ -43,7 +43,7 @@ export default function Dashboard() {
 
   const allocate = async (patientId, resourceId, resourceType) => {
     try {
-      await axios.post('http://localhost:5000/api/allocate', {
+      await axios.post('https://healthcare-allocator.onrender.com/api/allocate', {
         patient_id: patientId, resource_id: resourceId, resource_type: resourceType
       })
       fetchData()
@@ -226,7 +226,7 @@ export default function Dashboard() {
                             {!isAllocated && (
                               <button onClick={async () => {
                                 if(window.confirm('Remove ' + patient.name + ' from queue?')) {
-                                  await axios.delete('http://localhost:5000/api/patients/' + patient.id)
+                                  await axios.delete('https://healthcare-allocator.onrender.com/api/patients/' + patient.id)
                                   fetchData()
                                 }
                               }}
@@ -240,7 +240,7 @@ export default function Dashboard() {
                             {isAllocated && (
                             <button onClick={async () => {
                               if(window.confirm('Discharge ' + patient.name + '?')) {
-                                await axios.delete('http://localhost:5000/api/patients/' + patient.id)
+                                await axios.delete('https://healthcare-allocator.onrender.com/api/patients/' + patient.id)
                                 fetchData()
                               }
                             }}

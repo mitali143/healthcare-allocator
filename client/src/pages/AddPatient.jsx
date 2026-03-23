@@ -11,7 +11,7 @@ export default function AddPatient() {
     if (!form.name || !form.age || !form.symptoms) { alert('Fill required fields!'); return }
     setLoading(true)
     try {
-      await axios.post('http://localhost:5000/api/patients', form)
+      await axios.post('https://healthcare-allocator.onrender.com/api/patients', form)
       alert('Patient added!')
       navigate('/')
     } catch(e) { alert('Error!') }

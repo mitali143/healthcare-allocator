@@ -14,8 +14,8 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const [patientsRes, resourcesRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/patients'),
-        axios.get('http://localhost:5000/api/resources')
+        axios.get('https://healthcare-allocator.onrender.com/api/patients'),
+        axios.get('https://healthcare-allocator.onrender.com/api/resources')
       ])
       setPatients(patientsRes.data)
       setResources(resourcesRes.data)
@@ -28,7 +28,7 @@ export default function Dashboard() {
 
   const allocateResource = async (patientId, resourceId, resourceType) => {
     try {
-      await axios.post('http://localhost:5000/api/allocate', {
+      await axios.post('https://healthcare-allocator.onrender.com/api/allocate', {
         patient_id: patientId,
         resource_id: resourceId,
         resource_type: resourceType

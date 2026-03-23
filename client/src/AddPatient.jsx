@@ -19,7 +19,7 @@ export default function AddPatient() {
     }
     setLoading(true)
     try {
-      await axios.post('http://localhost:5000/api/patients', form)
+      await axios.post('https://healthcare-allocator.onrender.com/api/patients', form)
       alert('Patient added successfully!')
       navigate('/')
     } catch (error) {

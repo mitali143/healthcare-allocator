@@ -20,7 +20,7 @@ export default function PatientPortal() {
 
   const fetchResources = async () => {
     try {
-      const r = await axios.get('http://localhost:5000/api/resources')
+      const r = await axios.get('https://healthcare-allocator.onrender.com/api/resources')
       setResources(r.data)
     } catch(e) { console.error(e) }
   }
@@ -40,7 +40,7 @@ export default function PatientPortal() {
 
   const bookSlot = async () => {
     try {
-      await axios.post('http://localhost:5000/api/patients', {
+      await axios.post('https://healthcare-allocator.onrender.com/api/patients', {
         name: patient.name, age: 0,
         symptoms: symptoms || 'Emergency booking',
         vitals: 'Booked via patient portal'
