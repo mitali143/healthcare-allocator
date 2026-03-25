@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const genAI = new GoogleGenerativeAI("YOUR_API_KEY_HERE");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "dummy");
 
-export async function analyzeSymptoms(symptoms) {
+async function analyzeSymptoms(symptoms) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
@@ -24,7 +24,7 @@ export async function analyzeSymptoms(symptoms) {
     return JSON.parse(text);
 
   } catch (err) {
-    console.log(err);
+    console.log("Gemini failed, using fallback");
 
     return {
       urgency: "High",
@@ -32,3 +32,5 @@ export async function analyzeSymptoms(symptoms) {
     };
   }
 }
+
+module.exports = { analyzeSymptoms };
