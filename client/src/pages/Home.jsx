@@ -1,29 +1,54 @@
-<button 
-  onClick={handleEmergency}
-  style={{
-    background: "#e53935",
-    color: "white",
-    padding: "12px 20px",
-    borderRadius: "8px",
-    marginTop: "20px",
-    border: "none",
-    fontWeight: "bold"
-  }}
->
-  🚑 Emergency Mode
-</button>
-const handleEmergency = async () => {
-  const res = await fetch("https://healthcare-allocator.onrender.com/allocate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ symptoms: "critical emergency" })
-  });
+function Home() {
+  return (
+    <div style={{ padding: "20px", textAlign: "center" }}>
+      <h1>🚑 Smart Healthcare Allocation</h1>
 
-  const data = await res.json();
+      <p>Find the best hospital instantly using AI</p>
 
-  // redirect with data
-  localStorage.setItem("result", JSON.stringify(data));
-  window.location.href = "/patient-portal";
-};
+      <button
+        onClick={() => (window.location.href = "/patient")}
+        style={{
+          padding: "10px 20px",
+          marginTop: "20px",
+          borderRadius: "8px",
+          backgroundColor: "#007bff",
+          color: "white",
+          border: "none",
+          cursor: "pointer"
+        }}
+      >
+        Go to Patient Portal
+      </button>
+
+      <br /><br />
+
+      <button
+        onClick={async () => {
+          const res = await fetch("https://healthcare-allocator.onrender.com/allocate/recommend", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ symptoms: "critical emergency" })
+          });
+
+          const data = await res.json();
+          localStorage.setItem("result", JSON.stringify(data));
+          window.location.href = "/result";
+        }}
+        style={{
+          padding: "10px 20px",
+          borderRadius: "8px",
+          backgroundColor: "red",
+          color: "white",
+          border: "none",
+          cursor: "pointer"
+        }}
+      >
+        🚑 Emergency Mode
+      </button>
+    </div>
+  );
+}
+
+export default Home;
