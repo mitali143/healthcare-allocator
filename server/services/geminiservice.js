@@ -1,47 +1,34 @@
-const axios = require('axios');
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-async function analyzeSymptoms(symptoms, age, vitals) {
+const genAI = new GoogleGenerativeAI("YOUR_API_KEY_HERE");
+
+export async function analyzeSymptoms(symptoms) {
   try {
-    const response = await axios.post(
-      'https://openrouter.ai/api/v1/chat/completions',
-      {
-        model: 'mistralai/mistral-7b-instruct:free',
-        messages: [
-          {
-            role: 'user',
-            content: `You are a medical triage assistant. Based on the following patient information, provide a severity score from 1-10 (10 being most critical) and a brief reason.
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-Patient Information:
-- Age: ${age}
-- Symptoms: ${symptoms}
-- Vitals: ${vitals}
+    const prompt = `
+    Patient symptoms: ${symptoms}
 
-Respond in this exact format:
-SCORE: [number]
-REASON: [one sentence explanation]`
-          }
-        ]
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+    Give:
+    1. Urgency (Low/Medium/High)
+    2. Hospital type (General/ICU/Emergency)
 
-    const text = response.data.choices[0].message.content;
-    const scoreMatch = text.match(/SCORE:\s*(\d+)/);
-    const reasonMatch = text.match(/REASON:\s*(.+)/);
+    Return JSON:
+    { "urgency": "...", "hospitalType": "..." }
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    return JSON.parse(text);
+
+  } catch (err) {
+    console.log(err);
 
     return {
-      score: scoreMatch ? parseInt(scoreMatch[1]) : 5,
-      reason: reasonMatch ? reasonMatch[1] : 'Unable to analyze symptoms'
+      urgency: "High",
+      hospitalType: "ICU"
     };
-  } catch (error) {
-    console.error('OpenRouter API error:', error.message);
-    return { score: 5, reason: 'AI analysis unavailable' };
   }
 }
-
-module.exports = { analyzeSymptoms };
